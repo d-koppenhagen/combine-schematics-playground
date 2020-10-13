@@ -1,0 +1,20 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-new": {
+      "description": "Setup a new Angular project with Candy Enterprises defaults.",
+      "factory": "./ng-new/index",
+      "schema": "./ng-new/schema.json"
+    },
+    "ng-add": {
+      "description": "Add Candy Enterprises common things to your existing Angular app",
+      "factory": "./ng-add/index",
+      "schema": "./ng-add/schema.json"
+    },
+    "header": {
+      "description": "Add Candy Enterprises header component",
+      "factory": "./header/index",
+      "schema": "./header/schema.json"
+    }
+  }
+}

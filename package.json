@@ -1,0 +1,27 @@
+{
+  "name": "awesome-candy-enterprises",
+  "version": "0.0.0",
+  "description": "A blank schematics",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "npm run build -- --watch",
+    "test": "npm run build && jasmine src/**/*_spec.js"
+  },
+  "keywords": [
+    "schematics"
+  ],
+  "author": "",
+  "license": "MIT",
+  "schematics": "./src/collection.json",
+  "dependencies": {
+    "@angular-devkit/core": "^10.1.4",
+    "@angular-devkit/schematics": "^10.1.4",
+    "@schematics/angular": "^10.1.6",
+    "typescript": "~4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.1",
+    "@types/jasmine": "~3.5.0",
+    "jasmine": "^3.5.0"
+  }
+}
