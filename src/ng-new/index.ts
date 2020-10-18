@@ -95,7 +95,7 @@ const setupWorkspace = (options: NgNewSchema): Rule => (
     apply(empty(), [
       externalSchematic(angularSchematicsPackage, 'workspace', workspaceOptions),
       externalSchematic(angularSchematicsPackage, 'application', applicationOptions),
-      (tree: Tree, context: SchematicContext) => {
+      (_tree: Tree, context: SchematicContext) => {
         context.logger.info('🍭 Apply ng-new schematics');
 
         const sourceTemplates = url('./files');
