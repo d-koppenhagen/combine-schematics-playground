@@ -16,7 +16,6 @@ import {
 } from '@angular-devkit/schematics';
 import {
   NodePackageInstallTask,
-  NodePackageLinkTask,
   RepositoryInitializerTask,
 } from '@angular-devkit/schematics/tasks';
 import {
@@ -33,6 +32,7 @@ import { NgNewSchema } from './schema';
 import { NgAddSchema } from '../ng-add/schema';
 import { spawn } from 'child_process';
 import { strings } from '@angular-devkit/core';
+import { installNpmPackage } from '../utils';
 
 const angularSchematicsPackage = '@schematics/angular';
 
@@ -56,22 +56,7 @@ const installAngularSchematicsPackageForSetup = (): Rule => (
   _context: SchematicContext,
 ) => {
   return async (_host: Tree, context: SchematicContext) => {
-    await new Promise<boolean>((resolve) => {
-      context.logger.info(`📦 Installing package '${angularSchematicsPackage}' for setup...`);
-      spawn('npm', ['install', angularSchematicsPackage]).on(
-        'close',
-        (code: number) => {
-          if (code === 0) {
-            context.logger.info(`✅ '${angularSchematicsPackage}' package installed successfully`);
-            resolve(true);
-          } else {
-            const errorMessage = `❌ installation of '${angularSchematicsPackage}' package failed`;
-            context.logger.error(errorMessage);
-            throw new Error();
-          }
-        },
-      );
-    });
+    await installNpmPackage(context, angularSchematicsPackage);
   }
 };
 
@@ -161,15 +146,15 @@ const removeInstalledAngularSchematicsPackageForSetup = (): Rule => (
 ) => {
   return async (_host: Tree, context: SchematicContext) => {
     await new Promise<boolean>((resolve) => {
-      context.logger.info(`🗑 Removing temporarily installed '${angularSchematicsPackage}' package`);
+      context.logger.info(`🗑  Removing temporarily installed packages`);
       spawn('rm', ['-rf', 'node_modules', 'package-lock.json']).on(
         'close',
         (code: number) => {
           if (code === 0) {
-            context.logger.info(`✅ Cleanup of temporarily installed package '${angularSchematicsPackage}' was successfull`);
+            context.logger.info(`✅ Cleanup of temporarily installed packages was successfull`);
             resolve(true);
           } else {
-            const errorMessage = `❌ Cleanup of temporarily installed package '${angularSchematicsPackage}' failed`;
+            const errorMessage = `❌ Cleanup of temporarily installed packages failed`;
             context.logger.error(errorMessage);
             throw new Error();
           }
