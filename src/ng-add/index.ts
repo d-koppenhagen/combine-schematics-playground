@@ -9,7 +9,7 @@ import {
   template,
   chain,
   schematic,
-  externalSchematic
+  externalSchematic,
 } from '@angular-devkit/schematics';
 import { NgAddSchema } from './schema';
 import { HeaderSchema } from '../header/schema';
@@ -40,7 +40,7 @@ const addCandyComponents = (options: NgAddSchema): Rule => (
   _context: SchematicContext,
 ) => {
   const heraderOptions: HeaderSchema = {
-    style: options.style
+    style: options.style,
   };
   return schematic('header', heraderOptions);
 };
@@ -65,4 +65,3 @@ const addCypress = (_options: NgAddSchema): Rule => async (
     addCypressTestScripts: true,
   });
 };
-

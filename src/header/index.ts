@@ -2,12 +2,10 @@ import {
   Rule,
   SchematicContext,
   Tree,
-  externalSchematic
+  externalSchematic,
 } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/config';
-import {
-  Schema as componentOptions
-} from '@schematics/angular/component/schema';
+import { Schema as componentOptions } from '@schematics/angular/component/schema';
 import { HeaderSchema } from './schema';
 
 export default (options: HeaderSchema): Rule => {
@@ -20,8 +18,12 @@ export default (options: HeaderSchema): Rule => {
       prefix: project ? workspaceConfig.projects[project].prefix : '',
       project: options.project,
       path: 'src/app',
-      skipImport: false
+      skipImport: false,
     };
-    return externalSchematic('@schematics/angular', 'component', componentOptions);
+    return externalSchematic(
+      '@schematics/angular',
+      'component',
+      componentOptions,
+    );
   };
 };

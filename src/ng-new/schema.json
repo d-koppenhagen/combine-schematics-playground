@@ -17,10 +17,7 @@
       "description": "The stylesheet format to be used.",
       "type": "string",
       "default": "scss",
-      "enum": [
-        "scss",
-        "css"
-      ]
+      "enum": ["scss", "css"]
     }
   },
   "required": ["name"]

@@ -18,16 +18,12 @@ import {
   NodePackageInstallTask,
   RepositoryInitializerTask,
 } from '@angular-devkit/schematics/tasks';
-import {
-  Style,
-} from '@schematics/angular/ng-new/schema';
+import { Style } from '@schematics/angular/ng-new/schema';
 import {
   Schema as AngularWorkspaceSchema,
   PackageManager,
 } from '@schematics/angular/workspace/schema';
-import {
-  Schema as ApplicationSchema,
-} from '@schematics/angular/application/schema';
+import { Schema as ApplicationSchema } from '@schematics/angular/application/schema';
 import { NgNewSchema } from './schema';
 import { NgAddSchema } from '../ng-add/schema';
 import { spawn } from 'child_process';
@@ -36,7 +32,7 @@ import { installNpmPackage } from '../utils';
 
 const angularSchematicsPackage = '@schematics/angular';
 
-export default function(options: NgNewSchema): Rule {
+export default function (options: NgNewSchema): Rule {
   if (!options.name) {
     throw new SchematicsException(`Invalid options, "name" is required.`);
   }
@@ -57,7 +53,7 @@ const installAngularSchematicsPackageForSetup = (): Rule => (
 ) => {
   return async (_host: Tree, context: SchematicContext) => {
     await installNpmPackage(context, angularSchematicsPackage);
-  }
+  };
 };
 
 const setupWorkspace = (options: NgNewSchema): Rule => (
@@ -88,13 +84,21 @@ const setupWorkspace = (options: NgNewSchema): Rule => (
   };
 
   const candyAppOptions: NgAddSchema = {
-    style: Style.Scss
+    style: Style.Scss,
   };
 
   return mergeWith(
     apply(empty(), [
-      externalSchematic(angularSchematicsPackage, 'workspace', workspaceOptions),
-      externalSchematic(angularSchematicsPackage, 'application', applicationOptions),
+      externalSchematic(
+        angularSchematicsPackage,
+        'workspace',
+        workspaceOptions,
+      ),
+      externalSchematic(
+        angularSchematicsPackage,
+        'application',
+        applicationOptions,
+      ),
       (_tree: Tree, context: SchematicContext) => {
         context.logger.info('🍭 Apply ng-new schematics');
 
@@ -132,10 +136,7 @@ const finishSetup = (options: NgNewSchema): Rule => (
   // );
 
   context.addTask(
-    new RepositoryInitializerTask(
-      options.name,
-      {},
-    ),
+    new RepositoryInitializerTask(options.name, {}),
     packageTask ? [packageTask] : [],
   );
 };
@@ -151,7 +152,9 @@ const removeInstalledAngularSchematicsPackageForSetup = (): Rule => (
         'close',
         (code: number) => {
           if (code === 0) {
-            context.logger.info(`✅ Cleanup of temporarily installed packages was successfull`);
+            context.logger.info(
+              `✅ Cleanup of temporarily installed packages was successfull`,
+            );
             resolve(true);
           } else {
             const errorMessage = `❌ Cleanup of temporarily installed packages failed`;
@@ -161,5 +164,5 @@ const removeInstalledAngularSchematicsPackageForSetup = (): Rule => (
         },
       );
     });
-  }
+  };
 };
