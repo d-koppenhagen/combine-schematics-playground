@@ -3,10 +3,12 @@ import {
   SchematicContext,
   Tree,
   externalSchematic,
+  chain,
 } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { Schema as componentOptions } from '@schematics/angular/component/schema';
 import { HeaderSchema } from './schema';
+import { applyTemplatesFromFilesDir } from '../utils';
 
 export default (options: HeaderSchema): Rule => {
   return (tree: Tree, context: SchematicContext) => {
@@ -20,10 +22,9 @@ export default (options: HeaderSchema): Rule => {
       path: 'src/app',
       skipImport: false,
     };
-    return externalSchematic(
-      '@schematics/angular',
-      'component',
-      componentOptions,
-    );
+    return chain([
+      externalSchematic('@schematics/angular', 'component', componentOptions),
+      applyTemplatesFromFilesDir(options),
+    ]);
   };
 };

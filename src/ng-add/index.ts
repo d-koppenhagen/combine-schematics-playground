@@ -1,33 +1,20 @@
-import { strings } from '@angular-devkit/core';
 import {
   Rule,
   SchematicContext,
   Tree,
-  url,
-  apply,
-  mergeWith,
-  template,
   chain,
   schematic,
   externalSchematic,
 } from '@angular-devkit/schematics';
 import { NgAddSchema } from './schema';
 import { HeaderSchema } from '../header/schema';
-import { installNpmPackage } from '../utils';
+import { applyTemplatesFromFilesDir, installNpmPackage } from '../utils';
 
 export default (options: NgAddSchema): Rule => {
   return (tree: Tree, context: SchematicContext) => {
     context.logger.info('🍭 Apply ng-add schematics');
-
-    const sourceTemplates = url('./files');
-    const sourceParameterizedTemplates = apply(sourceTemplates, [
-      template({
-        ...strings,
-        ...options,
-      }),
-    ]);
     return chain([
-      mergeWith(sourceParameterizedTemplates),
+      applyTemplatesFromFilesDir(options),
       addCandyComponents(options),
       addCypress(options),
       addSemanticVersioningTooling(options),

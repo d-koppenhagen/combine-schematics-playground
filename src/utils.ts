@@ -1,4 +1,14 @@
-import { SchematicContext } from '@angular-devkit/schematics';
+import { strings } from '@angular-devkit/core';
+import {
+  apply,
+  Rule,
+  SchematicContext,
+  Tree,
+  url,
+  template,
+  mergeWith,
+  MergeStrategy,
+} from '@angular-devkit/schematics';
 import { spawn, SpawnOptions } from 'child_process';
 
 /**
@@ -29,4 +39,18 @@ export const installNpmPackage = (
       },
     );
   });
+};
+
+export const applyTemplatesFromFilesDir = <T>(options: T): Rule => (
+  _tree: Tree,
+  _context: SchematicContext,
+) => {
+  const sourceTemplates = url('./files');
+  const sourceParameterizedTemplates = apply(sourceTemplates, [
+    template({
+      ...strings,
+      ...options,
+    }),
+  ]);
+  return mergeWith(sourceParameterizedTemplates, MergeStrategy.Overwrite);
 };
