@@ -1,16 +1,34 @@
 {
   "name": "awesome-candy-enterprises",
   "version": "0.0.0",
-  "description": "A blank schematics",
+  "description": "An example schematics collection for demonstration purposes",
   "scripts": {
+    "release": "standard-version",
     "build": "tsc -p tsconfig.json",
     "build:watch": "npm run build -- --watch",
-    "test": "npm run build && jasmine src/**/*_spec.js"
+    "test": "npm run build && jasmine src/**/*_spec.js",
+    "prepublish": "npm run build"
   },
   "keywords": [
-    "schematics"
+    "schematics",
+    "Angular"
   ],
-  "author": "",
+  "author": "Danny Koppenhagen <mail@d-koppenhagen.de> (https://d-koppenhagen.de)",
+  "homepage": "https://github.com/d-koppenhagen/combine-schematics-playground",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d-koppenhagen/combine-schematics-playground.git"
+  },
+  "bugs": {
+    "url": "https://github.com/d-koppenhagen/combine-schematics-playground/issues",
+    "email": "mail@d-koppenhagen.de"
+  },
+  "ng-update": {
+    "migrations": "./src/migration.json"
+  },
+  "peerDependencies": {
+    "@angular/cli": "^10.0.0 || ^11.0.0-0"
+  },
   "license": "MIT",
   "schematics": "./src/collection.json",
   "dependencies": {
@@ -20,8 +38,25 @@
     "typescript": "~4.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
-    "jasmine": "^3.5.0"
+    "commitizen": "^4.2.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^4.3.0",
+    "jasmine": "^3.5.0",
+    "standard-version": "^9.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
