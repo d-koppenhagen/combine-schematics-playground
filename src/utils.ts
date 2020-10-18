@@ -17,8 +17,8 @@ import { spawn, SpawnOptions } from 'child_process';
 export const installNpmPackage = (
   context: SchematicContext,
   packageName: string,
-) => {
-  return new Promise<boolean>((resolve) => {
+): Promise<void> => {
+  return new Promise<void>((resolve) => {
     context.logger.info(
       `📦 Installing package '${packageName}' for external schematic setup...`,
     );
@@ -30,7 +30,7 @@ export const installNpmPackage = (
           context.logger.info(
             `✅ '${packageName}' package installed successfully`,
           );
-          resolve(true);
+          resolve();
         } else {
           const errorMessage = `❌ installation of '${packageName}' package failed`;
           context.logger.error(errorMessage);
