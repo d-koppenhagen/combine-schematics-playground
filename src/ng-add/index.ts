@@ -7,6 +7,7 @@ import {
   apply,
   mergeWith,
   template,
+  move,
   chain,
   schematic
 } from '@angular-devkit/schematics';
