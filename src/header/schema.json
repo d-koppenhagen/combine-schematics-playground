@@ -3,7 +3,7 @@
   "id": "awesome-candy-enterprises",
   "type": "object",
   "properties": {
-    "projectName": {
+    "project": {
       "type": "string",
       "description": "The name of the projects root directory (will be determined automatically when not specified)"
     },

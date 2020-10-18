@@ -4,12 +4,14 @@
     "ng-new": {
       "description": "Setup a new Angular project with Candy Enterprises defaults.",
       "factory": "./ng-new/index",
-      "schema": "./ng-new/schema.json"
+      "schema": "./ng-new/schema.json",
+      "hidden": true
     },
     "ng-add": {
       "description": "Add Candy Enterprises common things to your existing Angular app",
       "factory": "./ng-add/index",
-      "schema": "./ng-add/schema.json"
+      "schema": "./ng-add/schema.json",
+      "hidden": true
     },
     "header": {
       "description": "Add Candy Enterprises header component",

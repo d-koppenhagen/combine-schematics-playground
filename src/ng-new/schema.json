@@ -3,7 +3,7 @@
   "id": "awesome-candy-enterprises",
   "type": "object",
   "properties": {
-    "projectName": {
+    "name": {
       "description": "The name of the new workspace and initial project.",
       "type": "string",
       "format": "html-selector",
@@ -23,5 +23,5 @@
       ]
     }
   },
-  "required": ["projectName"]
+  "required": ["name"]
 }

@@ -15,12 +15,10 @@ export default (options: HeaderSchema): Rule => {
     context.logger.info('🍭 Adding candy header');
     const componentOptions: componentOptions = {
       name: 'header',
-      project: options.projectName,
+      project: options.project,
       path: 'src/app',
       skipImport: false
     };
-    console.log(componentOptions);
-
     return externalSchematic('@schematics/angular', 'component', componentOptions);
   };
 };

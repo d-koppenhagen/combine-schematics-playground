@@ -1,4 +1,4 @@
 export interface HeaderSchema {
-  projectName?: string,
+  project?: string,
   style: string;
 }

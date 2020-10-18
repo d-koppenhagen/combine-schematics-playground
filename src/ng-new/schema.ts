@@ -1,4 +1,4 @@
 export interface NgNewSchema {
-  projectName: string;
+  name: string;
   style: string;
 }
