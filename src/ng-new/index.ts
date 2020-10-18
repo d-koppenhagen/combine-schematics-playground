@@ -34,13 +34,47 @@ import { NgAddSchema } from '../ng-add/schema';
 import { spawn } from 'child_process';
 import { strings } from '@angular-devkit/core';
 
+const angularSchematicsPackage = '@schematics/angular';
+
 export default function(options: NgNewSchema): Rule {
   if (!options.name) {
     throw new SchematicsException(`Invalid options, "name" is required.`);
   }
+  return chain([
+    installAngularSchematicsPackageForSetup(),
+    setupWorkspace(options),
+    finishSetup(options),
+  ]);
+}
 
-  const directory = options.name;
+const installAngularSchematicsPackageForSetup = (): Rule => (
+  _tree: Tree,
+  _context: SchematicContext,
+) => {
+  return async (_host: Tree, context: SchematicContext) => {
+    await new Promise<boolean>((resolve) => {
+      context.logger.info('📦  Installing packages for setup...');
+      spawn('npm', ['install', angularSchematicsPackage]).on(
+        'close',
+        (code: number) => {
+          if (code === 0) {
+            context.logger.info('📦  Packages installed successfully ✅');
+            resolve(true);
+          } else {
+            const errorMessage = `❌ install Angular schematics from '${angularSchematicsPackage}' failed`;
+            context.logger.error(errorMessage);
+            throw new Error();
+          }
+        },
+      );
+    });
+  }
+};
 
+const setupWorkspace = (options: NgNewSchema): Rule => (
+  _tree: Tree,
+  _context: SchematicContext,
+) => {
   const workspaceOptions: AngularWorkspaceSchema = {
     name: options.name,
     version: '10.1.0',
@@ -49,6 +83,7 @@ export default function(options: NgNewSchema): Rule {
     strict: true,
     packageManager: PackageManager.Npm,
   };
+
   const applicationOptions: ApplicationSchema = {
     projectRoot: '',
     name: options.name,
@@ -67,69 +102,51 @@ export default function(options: NgNewSchema): Rule {
     style: Style.Scss
   };
 
-  const angularSchematicsPackage = '@schematics/angular';
+  return mergeWith(
+    apply(empty(), [
+      externalSchematic(angularSchematicsPackage, 'workspace', workspaceOptions),
+      externalSchematic(angularSchematicsPackage, 'application', applicationOptions),
+      (tree: Tree, context: SchematicContext) => {
+        context.logger.info('🍭 Apply ng-new schematics');
 
-  return chain([
-    async (_host: Tree, context: SchematicContext) => {
-      await new Promise<boolean>((resolve) => {
-        context.logger.info('📦  Installing packages for setup...');
-        spawn('npm', ['install', angularSchematicsPackage]).on(
-          'close',
-          (code: number) => {
-            if (code === 0) {
-              context.logger.info('📦  Packages installed successfully ✅');
-              resolve(true);
-            } else {
-              const errorMessage = `❌ install Angular schematics from '${angularSchematicsPackage}' failed`;
-              context.logger.error(errorMessage);
-              throw new Error();
-            }
-          },
-        );
-      });
-    },
-    mergeWith(
-      apply(empty(), [
-        externalSchematic(angularSchematicsPackage, 'workspace', workspaceOptions),
-        externalSchematic(angularSchematicsPackage, 'application', applicationOptions),
-        (tree: Tree, context: SchematicContext) => {
-          context.logger.info('🍭 Apply ng-new schematics');
+        const sourceTemplates = url('./files');
+        const sourceParameterizedTemplates = apply(sourceTemplates, [
+          template({
+            ...strings,
+            ...options,
+          }),
+        ]);
+        return mergeWith(sourceParameterizedTemplates, MergeStrategy.Overwrite);
+      },
+      schematic('ng-add', candyAppOptions),
+      move(options.name),
+    ]),
+  );
+};
 
-          const sourceTemplates = url('./files');
-          const sourceParameterizedTemplates = apply(sourceTemplates, [
-            template({
-              ...strings,
-              ...options,
-            }),
-          ]);
-          return mergeWith(sourceParameterizedTemplates, MergeStrategy.Overwrite);
-        },
-        schematic('ng-add', candyAppOptions),
-        move(directory),
-      ]),
+const finishSetup = (options: NgNewSchema): Rule => (
+  _tree: Tree,
+  context: SchematicContext,
+) => {
+  let packageTask;
+
+  packageTask = context.addTask(
+    new NodePackageInstallTask({
+      workingDirectory: options.name,
+      packageManager: PackageManager.Npm,
+    }),
+  );
+
+  packageTask = context.addTask(
+    new NodePackageLinkTask('@angular/cli', options.name),
+    [packageTask],
+  );
+
+  context.addTask(
+    new RepositoryInitializerTask(
+      options.name,
+      {},
     ),
-    (_host: Tree, context: SchematicContext) => {
-      let packageTask;
-
-      packageTask = context.addTask(
-        new NodePackageInstallTask({
-          workingDirectory: directory,
-          packageManager: PackageManager.Npm,
-        }),
-      );
-
-      packageTask = context.addTask(
-        new NodePackageLinkTask('@angular/cli', directory),
-        [packageTask],
-      );
-
-      context.addTask(
-        new RepositoryInitializerTask(
-          directory,
-          {},
-        ),
-        packageTask ? [packageTask] : [],
-      );
-    },
-  ]);
-}
+    packageTask ? [packageTask] : [],
+  );
+};
