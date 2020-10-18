@@ -44,24 +44,28 @@ export default function(options: NgNewSchema): Rule {
     installAngularSchematicsPackageForSetup(),
     setupWorkspace(options),
     finishSetup(options),
+    removeInstalledAngularSchematicsPackageForSetup(),
   ]);
 }
 
+/**
+ * install the '@schematics/angular' package temporarily to execute Angular CLI included schematics
+ */
 const installAngularSchematicsPackageForSetup = (): Rule => (
   _tree: Tree,
   _context: SchematicContext,
 ) => {
   return async (_host: Tree, context: SchematicContext) => {
     await new Promise<boolean>((resolve) => {
-      context.logger.info('📦  Installing packages for setup...');
+      context.logger.info(`📦 Installing package '${angularSchematicsPackage}' for setup...`);
       spawn('npm', ['install', angularSchematicsPackage]).on(
         'close',
         (code: number) => {
           if (code === 0) {
-            context.logger.info('📦  Packages installed successfully ✅');
+            context.logger.info(`✅ '${angularSchematicsPackage}' package installed successfully`);
             resolve(true);
           } else {
-            const errorMessage = `❌ install Angular schematics from '${angularSchematicsPackage}' failed`;
+            const errorMessage = `❌ installation of '${angularSchematicsPackage}' package failed`;
             context.logger.error(errorMessage);
             throw new Error();
           }
@@ -137,10 +141,10 @@ const finishSetup = (options: NgNewSchema): Rule => (
     }),
   );
 
-  packageTask = context.addTask(
-    new NodePackageLinkTask('@angular/cli', options.name),
-    [packageTask],
-  );
+  // packageTask = context.addTask(
+  //   new NodePackageLinkTask('@angular/cli', options.name),
+  //   [packageTask],
+  // );
 
   context.addTask(
     new RepositoryInitializerTask(
@@ -149,4 +153,28 @@ const finishSetup = (options: NgNewSchema): Rule => (
     ),
     packageTask ? [packageTask] : [],
   );
+};
+
+const removeInstalledAngularSchematicsPackageForSetup = (): Rule => (
+  _tree: Tree,
+  _context: SchematicContext,
+) => {
+  return async (_host: Tree, context: SchematicContext) => {
+    await new Promise<boolean>((resolve) => {
+      context.logger.info(`🗑 Removing temporarily installed '${angularSchematicsPackage}' package`);
+      spawn('rm', ['-rf', 'node_modules', 'package-lock.json']).on(
+        'close',
+        (code: number) => {
+          if (code === 0) {
+            context.logger.info(`✅ Cleanup of temporarily installed package '${angularSchematicsPackage}' was successfull`);
+            resolve(true);
+          } else {
+            const errorMessage = `❌ Cleanup of temporarily installed package '${angularSchematicsPackage}' failed`;
+            context.logger.error(errorMessage);
+            throw new Error();
+          }
+        },
+      );
+    });
+  }
 };
