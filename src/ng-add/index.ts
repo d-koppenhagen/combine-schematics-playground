@@ -7,7 +7,6 @@ import {
   apply,
   mergeWith,
   template,
-  move,
   chain,
   schematic,
   externalSchematic
