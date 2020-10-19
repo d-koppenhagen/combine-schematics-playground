@@ -2,27 +2,28 @@
 
 This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
 
-### Testing
+## New project (usage with `ng new`)
 
-To test locally, install `@angular-devkit/schematics-cli` globally and use the `schematics` command line tool. That tool acts the same as the `generate` command of the Angular CLI, but also has a debug mode.
-
-Check the documentation with
+Setting up a new Angular project using _awesome-candy-enterprises_ default settings:
 
 ```bash
-schematics --help
+npm i -g awesome-candy-enterprises
+ng new foo --collection=awesome-candy-enterprises
 ```
 
-### Unit Testing
+## Add to existing project (usage with `ng add`)
 
-`npm run test` will run the unit tests, using Jasmine as a runner and test framework.
-
-### Publishing
-
-To publish, simply do:
+You can also apply the _awesome-candy-enterprises_ schematics to an existing Angular project:
 
 ```bash
-npm run build
-npm publish
+ng add awesome-candy-enterprises
 ```
 
-That's it!
+## Generate parts (usage with `ng g`)
+
+Lust but not least, you can use the generator schematics from this collection to generate components like the _awesome-candy-enterprises_ header component separately:
+
+```bash
+npm i awesome-candy-enterprises
+ng g awesome-candy-enterprises:header
+```
