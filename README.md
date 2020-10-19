@@ -27,3 +27,38 @@ Lust but not least, you can use the generator schematics from this collection to
 npm i awesome-candy-enterprises
 ng g awesome-candy-enterprises:header
 ```
+
+## Update code (usage with `ng update`)
+
+Show if updates are available:
+
+```bash
+$ ng update
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 38 dependencies.
+  We analyzed your package.json, there are some packages to update:
+
+   Name                        Version          Command to update
+  ---------------------------------------------------------------------------------
+   awesome-candy-enterprises   0.0.1 -> 0.0.2   ng update awesome-candy-enterprises
+```
+
+Run migrations:
+
+```bash
+$ ng update awesome-candy-enterprises
+Using package manager: 'npm'
+Collecting installed dependencies...
+Found 38 dependencies.
+Fetching dependency metadata from registry...
+    Updating package.json with dependency awesome-candy-enterprises @ "0.0.2" (was "0.0.1")...
+UPDATE package.json (1854 bytes)
+⠧ Installing packages...
+✔ Packages installed successfully.
+** Executing migrations of package 'awesome-candy-enterprises' **
+
+❯ Updates to Version 0.0.2
+    ✨ Migration executed
+  Migration completed.
+```
