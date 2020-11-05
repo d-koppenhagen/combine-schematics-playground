@@ -8,7 +8,7 @@ import {
 } from '@angular-devkit/schematics';
 import { NgAddSchema } from './schema';
 import { HeaderSchema } from '../header/schema';
-import { applyTemplatesFromFilesDir, installNpmPackage } from '../utils';
+import { applyTemplatesFromFilesDir/*, installNpmPackage*/ } from '../utils';
 
 export default (options: NgAddSchema): Rule => {
   return (tree: Tree, context: SchematicContext) => {
@@ -34,19 +34,23 @@ const addCandyComponents = (options: NgAddSchema): Rule => (
 
 const addSemanticVersioningTooling = (_options: NgAddSchema): Rule => async (
   _tree: Tree,
-  context: SchematicContext,
+  _context: SchematicContext,
 ) => {
   const packageName = 'ngx-semantic-version';
-  await installNpmPackage(context, packageName);
-  return externalSchematic(packageName, 'ng-add', {});
+  // await installNpmPackage(context, packageName);
+  return externalSchematic(packageName, 'ng-add', {
+    packages: [
+      'commitlint', 'commitizen', 'husky', 'standard-version'
+    ]
+  });
 };
 
 const addCypress = (_options: NgAddSchema): Rule => async (
   _tree: Tree,
-  context: SchematicContext,
+  _context: SchematicContext,
 ) => {
   const packageName = '@briebug/cypress-schematic';
-  await installNpmPackage(context, packageName);
+  // await installNpmPackage(context, packageName);
   return externalSchematic(packageName, 'ng-add', {
     removeProtractor: true,
     addCypressTestScripts: true,

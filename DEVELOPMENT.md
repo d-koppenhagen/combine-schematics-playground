@@ -1,6 +1,4 @@
-# ngx-semantic-version
-
-## Development
+# Development
 
 ### Testing
 

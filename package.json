@@ -34,8 +34,9 @@
   "dependencies": {
     "@angular-devkit/core": "^10.1.4",
     "@angular-devkit/schematics": "^10.1.4",
-    "@briebug/cypress-schematic": "^4.2.3",
+    "@briebug/cypress-schematic": "^4.3.0",
     "@schematics/angular": "^10.1.6",
+    "ngx-semantic-version": "^2.2.0",
     "typescript": "~4.0.2"
   },
   "devDependencies": {
