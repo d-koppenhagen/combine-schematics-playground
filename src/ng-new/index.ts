@@ -26,9 +26,8 @@ import {
 import { Schema as ApplicationSchema } from '@schematics/angular/application/schema';
 import { NgNewSchema } from './schema';
 import { NgAddSchema } from '../ng-add/schema';
-import { spawn } from 'child_process';
+import { spawn, SpawnOptions } from 'child_process';
 import { strings } from '@angular-devkit/core';
-import { installNpmPackage } from '../utils';
 
 const angularSchematicsPackage = '@schematics/angular';
 
@@ -52,7 +51,27 @@ const installAngularSchematicsPackageForSetup = (): Rule => (
   _context: SchematicContext,
 ) => {
   return async (_host: Tree, context: SchematicContext) => {
-    await installNpmPackage(context, angularSchematicsPackage);
+    await new Promise<void>((resolve) => {
+      context.logger.info(
+        `📦 Installing package '${angularSchematicsPackage}' for external schematic setup...`,
+      );
+      const spawnOptions: SpawnOptions = { stdio: 'inherit' };
+      spawn('npm', ['install', angularSchematicsPackage], spawnOptions).on(
+        'close',
+        (code: number) => {
+          if (code === 0) {
+            context.logger.info(
+              `✅ '${angularSchematicsPackage}' package installed successfully`,
+            );
+            resolve();
+          } else {
+            const errorMessage = `❌ installation of '${angularSchematicsPackage}' package failed`;
+            context.logger.error(errorMessage);
+            throw new Error();
+          }
+        },
+      );
+    });
   };
 };
 
