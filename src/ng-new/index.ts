@@ -81,7 +81,7 @@ const setupWorkspace = (options: NgNewSchema): Rule => (
 ) => {
   const workspaceOptions: AngularWorkspaceSchema = {
     name: options.name,
-    version: '10.1.0',
+    version: '11.0.0',
     newProjectRoot: 'projects',
     minimal: false,
     strict: true,
